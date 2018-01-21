@@ -1,14 +1,22 @@
-class GameCell {
 
-  constructor(game) {
+class ViewComponent {
+  getElement() {
+    return this._element;
+  }
+}
+
+class GameCell extends ViewComponent{
+
+  constructor() {
+    super();
     const self = this;
     this._state = 'unknown';
     this._element = document.createElement('td');
-    game.appendChild(this.getElement());
     this._element.addEventListener('click', function(){
       self.setState('miss');
       console.log(self._state)
     });
+
   }
 
   setState(state) {
@@ -19,11 +27,11 @@ class GameCell {
     this._element.className = 'cell_' + state;
   }
 
-  getElement() {
-    return this._element;
-  }
+
 }
 
 const container = document.getElementById('game');
 const tr = document.createElement('tr');
-const cell1 = new GameCell(container);
+container.appendChild(tr);
+const cell1 = new GameCell();
+tr.appendChild(cell1.getElement());
