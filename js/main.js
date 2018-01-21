@@ -1,15 +1,29 @@
-const gameElement = document.getElementById('game');
-const row = document.createElement('tr');
-const cell = document.createElement('td');
-const cell1 = document.createElement('td');
-row.appendChild(cell);
-row.appendChild(cell1);
-gameElement.appendChild(row);
+class GameCell {
 
-const trArr = Array.from(document.querySelector('#game tr').childNodes);
+  constructor(game) {
+    const self = this;
+    this._state = 'unknown';
+    this._element = document.createElement('td');
+    game.appendChild(this.getElement());
+    this._element.addEventListener('click', function(){
+      self.setState('miss');
+      console.log(self._state)
+    });
+  }
 
-trArr.forEach( function(elem) {
-  elem.addEventListener('click', function() {
-    return !this.classList.length ? this.classList.add('clicked') : this.classList.remove('clicked');
-  });
-});
+  setState(state) {
+    if( state !== 'unknkown' && state !== 'miss' && state !== 'hit'){
+      throw new Error('Invalid state');
+    }
+    this._state = state;
+    this._element.className = 'cell_' + state;
+  }
+
+  getElement() {
+    return this._element;
+  }
+}
+
+const container = document.getElementById('game');
+const tr = document.createElement('tr');
+const cell1 = new GameCell(container);
