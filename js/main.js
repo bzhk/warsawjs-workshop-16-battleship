@@ -41,7 +41,6 @@ class GameBoard extends ViewComponent{
     this._rowsCount = rowsCount;
     this._itemsCount = itemsCount;
     this.board = [];
-    this.ships = [ {x:1,y:1} ]
     this._element = this.buildAllBoard(10,10);
     this.handleCellClick = handleCellClick;
     this.setShips();
@@ -102,6 +101,7 @@ class GameModel {
       this._score = 0;
       this._rocket = 0;
       this._lastScore = 0;
+      this._listShips = [];
       this._ships = [];
     }
 
@@ -123,21 +123,30 @@ class GameModel {
         clicked: true,
         isShip: false,
       }
-
+      console.log(`==== LOG ====`)
+      this.updateRockets();
       if(state === 'shipField'){
-        this.updateRockets();
         this.updateScore();
-        this.updateLastScore();
         elem.isShip = true;
         board[column][row].setState('hit');
+        console.log('Trafiłeś statek +10');
       }else{
-        this.updateLastScore(true);
+        this.updateLastScore();
         board[column][row].setState('miss');
+        console.log('Pudło -5');
       }
       this._ships.push(elem);
-      console.log(this._ships)
+      console.log(`Ilość użytych rakiet: ${this._rocket}`)
+      console.log(`Twój wynik: ${this._lastScore}`);
     }
 
+    createShip(row, column){
+      let elem = {
+        cords: row + '/' + column,
+        clicked: false,
+        isShip: true,
+      }
+    }
 
     updateScore(){
       this._score += 10;
@@ -148,10 +157,8 @@ class GameModel {
       this._rocket += 1;
     }
 
-    updateLastScore(x){
-      if(x){
-        this._lastScore = this._lastScore - 5;
-      }
+    updateLastScore(){
+      this._lastScore = this._lastScore - 5;
     }
 
     returnScore(){
